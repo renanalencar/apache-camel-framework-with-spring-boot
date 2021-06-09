@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
  * @author renan
  *
  */
-@Component
+
+//@Component
 public class MyFileRouter extends RouteBuilder {
 
 	@Override

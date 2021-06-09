@@ -1,0 +1,5 @@
+package com.in28minutes.com.microservices.calmemicroservicea.routes.c;
+
+public class ActiveMqSenderRouter {
+
+}
