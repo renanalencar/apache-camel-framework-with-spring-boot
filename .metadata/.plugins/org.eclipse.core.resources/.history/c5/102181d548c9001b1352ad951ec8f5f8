@@ -38,7 +38,7 @@ public class MyFirstTimerRouter extends RouteBuilder {
 		.log("${body}") // Time now is 2021-06-09T12:58:13.764
 		.bean(loggingComponent)
 		.log("${body}") // SimpleLoggingProcessingComponent Time now is 2021-06-09T12:58:13.764
-		.process(new SimpleLoggingProcessor())
+		.process(new SimpleLoggingProcessor)
 		.to("log:first-timer"); // database
 
 	}

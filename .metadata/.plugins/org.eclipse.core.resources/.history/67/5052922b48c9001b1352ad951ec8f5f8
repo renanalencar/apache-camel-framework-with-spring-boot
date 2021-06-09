@@ -1,0 +1,14 @@
+package com.in28minutes.com.microservices.calmemicroservicea.routes.a;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+
+public class SimpleLoggingProcessor implements Processor {
+
+	@Override
+	public void process(Exchange exchange) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+}
