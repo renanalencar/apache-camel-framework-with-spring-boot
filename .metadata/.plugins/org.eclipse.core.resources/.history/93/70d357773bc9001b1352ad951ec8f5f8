@@ -24,18 +24,18 @@ public class MyFirstTimerRouter extends RouteBuilder {
 		// log
 		// Exchange[ExchangePattern: InOnly, BodyType: null, Body: [Body is null]]
 		from("timer:first-timer") // null
-		.log("${body}")
+		.log("${body")
 		//.transform().constant("Time now is " + LocalDateTime.now())
 		.transform().constant("My Constant Message")
-		.log("${body}")
+		.log("${body")
 		//.bean("getCurrentTimeBean")
 		
 		// Processing
 		// Transformation
 		.bean(getCurrentTimeBean, "getCurrentTime")
-		.log("${body}")
+		.log("${body")
 		.bean(loggingComponent)
-		.log("${body}")
+		.log("${body")
 		.to("log:first-timer"); // database
 
 	}
