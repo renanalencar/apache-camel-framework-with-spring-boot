@@ -25,6 +25,9 @@ public class ActiveMqReceiverRouter extends RouteBuilder {
 	
 	@Autowired
 	private MyCurrencyExchangeProcessor myCurrencyExchangeProcessor;
+	
+	@Autowired
+	private MyCurrencyExchangeTransformer myCurrencyExchangeTransformer;
 
 	@Override
 	public void configure() throws Exception {
@@ -32,9 +35,16 @@ public class ActiveMqReceiverRouter extends RouteBuilder {
 		//CurrencyExchange
 		//{ "id": 1000, "from": "USD", "to": "INR", "conversionMultiple":70 }
 		
-		from("activemq:my-activemq-queue")
-		.unmarshal().json(JsonLibrary.Jackson, CurrencyExchange.class)
-		.bean(myCurrencyExchangeProcessor)
+//		from("activemq:my-activemq-queue")
+//		.unmarshal()
+//		.json(JsonLibrary.Jackson, CurrencyExchange.class)
+//		.bean(myCurrencyExchangeProcessor)
+//		.bean(myCurrencyExchangeTransformer)
+//		.to("log:received-message-from-active-qm");
+		
+		from("activemq:my-activemq-xml-queue")
+		.unmarshal()
+		.jacksonxml(CurrencyExchange.class)
 		.to("log:received-message-from-active-qm");
 	}
 
