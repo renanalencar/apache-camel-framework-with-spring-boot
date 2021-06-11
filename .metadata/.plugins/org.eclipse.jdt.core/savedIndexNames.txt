@@ -28,7 +28,6 @@ INDEX VERSION 1.131+C:\Users\renan\Sites\apache-camel-framework-with-spring-boot
 3386934724.index
 4189275739.index
 2366356923.index
-268145751.index
 3943818496.index
 225791874.index
 4247142154.index
@@ -86,7 +85,6 @@ INDEX VERSION 1.131+C:\Users\renan\Sites\apache-camel-framework-with-spring-boot
 3618390536.index
 4113950305.index
 2019418878.index
-2019076110.index
 497356269.index
 3806370933.index
 1205130051.index
