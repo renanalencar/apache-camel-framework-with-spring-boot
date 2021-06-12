@@ -73,8 +73,8 @@ public class EipPatternsRouter extends RouteBuilder {
 		//Dynamic Routing
 		//Step 1, Step 2, Step 3
 		
-		from("timer:routingSlip?period={{timePeriod}}")
-//		.transform().constant("My Message is Hardcoded")
+		from("timer:dynamicRouting?period={{timePeriod}}")
+		.transform().constant("My Message is Hardcoded")
 		.dynamicRouter(method(dynamicRouterBean));
 		
 		//Endpoint1
@@ -114,7 +114,7 @@ class DynamicRouterBean {
 	
 	Logger logger = LoggerFactory.getLogger(DynamicRouterBean.class);
 	
-	int invocations;
+	int invocations = 0;
 	
 	public String decideTheNextEndpoint(
 			@ExchangeProperties Map<String, String> properties, 
