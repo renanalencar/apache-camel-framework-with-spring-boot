@@ -28,6 +28,10 @@ public class EipPatternsRouter extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
+		
+		getContext().setTracing(true);
+		errorHandler(deadLetterChannel("activemq:dead-letter-queue"));
+		
 		//Pipeline
 		//Content Based Routing - choice()
 		//Multicast
@@ -77,7 +81,9 @@ public class EipPatternsRouter extends RouteBuilder {
 		//Endpoint2
 		//Endpoint3
 		
+		
 		from("direct:endpoint1")
+		.wireTap("log:wire-tap") //add
 		.to("{{endpoint-for-logging}}");
 		
 		from("direct:endpoint2")
