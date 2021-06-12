@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import com.in28minutes.com.microservices.camelmicroservicea.CurrencyExchange;
 import com.in28minutes.com.microservices.camelmicroservicea.routes.c.ArrayListAggregationStrategy;
 
-@Component
+//@Component
 public class EipPatternsRouter extends RouteBuilder {
 	
 	@Autowired
