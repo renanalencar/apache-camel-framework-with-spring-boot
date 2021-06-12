@@ -1,52 +1,30 @@
 package com.in28minutes.com.microservices.camelmicroservicea.patterns;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.camel.AggregationStrategy;
-import org.apache.camel.Exchange;
+import org.apache.camel.Body;
+import org.apache.camel.ExchangeProperties;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.stereotype.Component;
 
 import com.in28minutes.com.microservices.camelmicroservicea.CurrencyExchange;
+import com.in28minutes.com.microservices.camelmicroservicea.routes.c.ArrayListAggregationStrategy;
 
 @Component
 public class EipPatternsRouter extends RouteBuilder {
 	
 	@Autowired
-		private SplitterComponent splitter;
-
-	/**
-	 * @author renan
-	 *
-	 */
-	public class ArrayListAggregationStrategy implements AggregationStrategy {
-
-		//1,2,3
-		//null, 1 => [1]
-		//1, 2 => [1,2]
-		//[1,2], 3 => [1,2,3]
-		
-		@Override
-		public Exchange aggregate(Exchange oldExchange, Exchange newExchange) {
-			Object newBody = newExchange.getIn().getBody();
-			ArrayList<Object> list = null;
-			if (oldExchange == null) {
-				list = new ArrayList<Object>();
-				list.add(newBody);
-				newExchange.getIn().setBody(list);
-				return newExchange;
-			} else {
-				list = oldExchange.getIn().getBody(ArrayList.class);
-				list.add(newBody);
-				return oldExchange;
-			}
-		}
-
-	}
+	private SplitterComponent splitter;
+	
+	@Autowired
+	private DynamicRouterBean dynamicRouterBean;
 
 	@Override
 	public void configure() throws Exception {
@@ -84,9 +62,20 @@ public class EipPatternsRouter extends RouteBuilder {
 		String routingSlip = "direct:endpoint1,direct:endpoint2";
 //		String routingSlip = "direct:endpoint1,direct:endpoint2,direct:endpoint3";
 		
+//		from("timer:routingSlip?period=10000")
+//		.transform().constant("My Message is Hardcoded")
+//		.routingSlip(simple(routingSlip));
+		
+		//Dynamic Routing
+		//Step 1, Step 2, Step 3
+		
 		from("timer:routingSlip?period=10000")
 		.transform().constant("My Message is Hardcoded")
-		.routingSlip(simple(routingSlip));
+		.dynamicRouter(method(dynamicRouterBean));
+		
+		//Endpoint1
+		//Endpoint2
+		//Endpoint3
 		
 		from("direct:endpoint1")
 		.to("log:directendpoint1");
@@ -111,5 +100,29 @@ class SplitterComponent {
 	public List<String> splitInput(String body) {
 //		return List.of("ABC", "DEF", "GHI"); // List.of() faz parte do Java 9
 		return Arrays.asList("ABC", "DEF", "GHI");
+	}
+}
+
+@Component
+class DynamicRouterBean {
+	
+	Logger logger = LoggerFactory.getLogger(DynamicRouterBean.class);
+	
+	int invocations;
+	
+	public String decideTheNextEndpoint(
+			@ExchangeProperties Map<String, String> properties, 
+			@Headers Map<String, String> headers, 
+			@Body String body) {
+		
+		logger.info("{} {} {}", properties, headers, body);
+		invocations++;
+		
+		if(invocations % 3 == 0)
+			return "direct:endpoint1";
+		if (invocations % 3 == 1)
+			return "direct:endpoint2,direct:endpoint3";
+		
+		return null;
 	}
 }
